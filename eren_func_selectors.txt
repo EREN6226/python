@@ -1,0 +1,30 @@
+import socket
+import selectors
+
+
+def __create_socket(adress):
+    __socket_socket__= socket.socket()
+    __socket_socket__.bind(adress)
+    __socket_socket__.setblocking(True)
+    conn,addr = __socket_socket__.accept()
+    print(f'Connect is managed --> {addr}')
+    __sel__= selectors.DefaultSelector()
+    __sel__.register(__socket_socket__, events=selectors.EVENT_READ, data=conn)
+    return conn,__sel__
+address= ('',0)
+def __create_selector(fileobj=__create_socket(address)[0],
+                      selector= __create_socket(address)[1]):
+    data = fileobj.recv(1000)
+    while True:
+    	if data != None:
+        	events = selector.select()
+        	for key,value in events:
+            		if key.data == None:
+                		selector.unregister(key.fileobj)
+                		selector.close()
+                		fileobj.close()
+            		else:
+               		     print(f'{key.fileobj} ---> {key.fd} --->{key.data}')
+    	else:
+		break
+        	return None

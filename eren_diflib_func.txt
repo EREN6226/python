@@ -1,0 +1,16 @@
+import difflib
+import sys
+def __create_func_difflib(a,target):
+    __sequnce_class = difflib.SequenceMatcher(isjunk=lambda x: x ==' ' & lambda x: x == x.upper(),
+	autojunk=True)
+    __sequnce_class.set_seq1(a)
+    __sequnce_class.set_seq2(target)
+    ratio_result=__sequnce_class.quick_ratio()
+    if ratio_result != 1:
+        tag,i1,i2,j1,j2=__sequnce_class.get_opcodes()
+	format_1 = {!8r}
+	format_2 = {!r}
+        return f'{tag} --> a[{i1}:{j1}] --> b[{i2}:{j2}]  -->  {format_1} --> {format_2} '  
+    else:
+	print({} was finded by system succesfully'.format(target))
+        sys.stdout.writelines(__sequnce_class)

@@ -27,4 +27,5 @@ def __create_selector(fileobj=__create_socket(address)[0],
                		     print(f'{key.fileobj} ---> {key.fd} --->{key.data}')
     	else:
 		break
-        	return None
+        	
+

@@ -1,0 +1,22 @@
+import types
+import weakref
+import sys
+
+def __weakref_(obj,func,*args,**kwargs)->None:
+    types_obj = type(obj)
+    if types_obj == types.FunctionType:
+        __finalize__=weakref.finalize(object,func,*args,**kwargs)
+        if __finalize__.alive:
+            sys.stdout.write(__finalize__.__call__())
+            return __finalize__.detach()
+        else:
+            return 
+    else:
+        __func_1__=func
+        __func__=obj.__func_1__
+        __finalize__= weakref.finalize(obj,__func,*args,**kwargs)
+	if __finalize__.alive:
+            sys.stdout.write(__finalize__.__call__())
+            return __finalize__.detach()
+        else:
+            return 

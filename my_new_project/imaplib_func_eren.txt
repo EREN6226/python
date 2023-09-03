@@ -1,0 +1,31 @@
+import imaplib
+import ssl
+import time
+def __imaplib_create_ssl(certfile,keyfile,host,port):
+    context_ssl= ssl.SSLContext(ssl.PROTOCOL_SSLv23)
+    imap_ssl= imaplib.IMAP4_SSL(host,port,keyfile,certfile)
+    open_imap= imap_ssl.open()
+    read_imap = imap_ssl.read(1000000000000000000000)
+    data = input('File object:')
+    open_data= open(data,'r',encoding='utf-8')
+    size= open_data.size()
+    new_size = 0
+	new_list = [] 
+    while True:
+	read_open_data = open_data.read()
+	new_list += read_open_data
+	if new_size < size:
+        	want_send = str(input('Do you want to send documentry --->> (Y/N):')).upper()
+		assert len(want_send) == 1
+        	if want_send == 'Y':
+            		imap_ssl.send(data=read_open_data)
+			new_size += read_open_data.size()
+            		print(f'Please wait documentry is sending --->> {open_data.name}')
+            		time.sleep(5)
+        	else:
+            		imap_ssl.shutdown()
+            		break
+    	else:
+		imap_ssl.shutdown()
+		break
+   return (i for i in new_list)

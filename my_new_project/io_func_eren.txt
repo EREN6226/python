@@ -1,0 +1,51 @@
+import io
+import logging
+import sys
+import time
+import threading
+import functools
+
+def __open_io_read_and_write():
+    @functools.lru_cache(maxsize=24)    
+    def __inner_fun_file():
+        try:
+            __base_file = io.IOBase()
+            print(f'{__base_file.fileno()} documentry is reading')
+            time.sleep(2)
+            empyt_list=[]
+            if __base_file.readable() and __base_file.seekable():
+                if __base_file.tell() !=0:
+                    __base_file.seek(0)
+                __read_documentry__= __base_file.readlines()
+                empyt_list.append(__read_documentry__)
+                __base_file.flush()
+            else:
+                if __base_file.closed:
+                    pass
+                else:
+                    __base_file.close()
+
+            return (i for i in empyt_list if empyt_list)
+        except (io.UnsupportedOperation | io.BlockingIOError) as err:
+            return
+
+    def __inner_telnetlib_func():
+        threading.Lock().acquire()
+        __telnet_func()
+        threading.Lock().release()
+
+    try:
+        __thread_class_1 = threading.Thread(target=__inner_telnetlib_func,args=(host,port,))
+        __thread_class_2 = threading.Thread(target=__inner_fun_file,args=())
+        while True:
+	    __thread_class_2.run()
+		__thread_class_1.run()
+		__thread_class_1.join()
+        __thread_class_2.join()
+        if __thread_class_1.is_alive() | __thread_class_2.is_alive():
+            print('System is exiting 5 second later !!!')
+            sys.exit(5)            
+    except threading.ThreadError as err:
+        logging.basicConfig(level=logging.ERROR)
+        logging.error('Opss Problem %s'%err)
+        sys.exit(5)

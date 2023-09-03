@@ -1,0 +1,21 @@
+import logging
+import time
+import urllib.request
+import urllib.parse
+
+def http_open_documentry(url_http):
+    time_start = time.process_time()
+    try:
+        urllib.request.HTTPHandler().set_http_debuglevel(level=) #level fill later
+        q_req= input('What do you search HTTP PROTOCOL?')
+        headers = {
+            'q':q_req
+        }
+        request= urllib.request.Request(url=url_http,data=None,headers=headers,origin_req_host='',unverifiable=True,method=None)
+        urllib.request.HTTPHandler().http_request(request=request)
+        finish_time = time.process_time()
+        assert  finish_time - time_start < 120.0
+        return urllib.request.HTTPHandler().http_open(req=request).readlines()
+    except urllib.request.HTTPErrorProcessor as err:
+        logging.basicConfig(level=logging.ERROR)
+        print(logging.error('%s'%err))

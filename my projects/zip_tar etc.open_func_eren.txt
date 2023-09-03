@@ -1,0 +1,28 @@
+import abc
+import os
+import shutil
+
+
+def __zip_open_func(file_name,extract_dir:[Path]=None,name=None):
+    __format= shutil.get_unpack_formats()
+    for i in __format:
+        print('--'*5)
+        print(i)
+        print('--'*5)
+    __chosen__ = input('Please you need to choice a format:')
+    if not __chosen__:
+        @abc.abstractmethod
+        def __inner_func(name):
+            __unpack_format=shutil.register_unpack_format(name,
+                                          extensions=['.zip'],
+                                          function=('new_format',os.curdir),
+                                          extra_args=None,
+                                          description='new_format_shutil')
+            return __unpack_format
+        __chosen__ = __inner_func(name)
+    else:
+        pass
+    open_zip=shutil.unpack_archive(filename=file_name,
+                          extract_dir=extract_dir,format=__chosen__)
+    shutil.unregister_unpack_format(name)
+    return open_zip

@@ -1,0 +1,48 @@
+from keras import layers
+from keras import Input
+from keras.models import Model
+import numpy as np
+from keras.optimizers import RMSprop
+from keras.losses import categorical_crossentropy,binary_crossentropy,mse
+from keras.utils import get_file
+import pandas as pd
+import os
+
+def get_file_obj(url:str)-> None|:
+	file = get_file(fname='csv_doc.csv',origin=url)
+	if os.path.isfile(file):
+		df= pd.read_csv(file)
+		return df
+	else:
+		return None
+
+vocabulary_size = 50000
+num_income_group = 10
+
+
+input_one = Input(shape=(None,),dtype=np.int32,name='posts')
+embeding_layer = layers.Embedding(256,vocabulary_size)(input_one)
+x = layers.Conv1D(128,5,activation='relu')(embeding_layer)
+x= layers.MaxPooling1D(5)(x)
+x = layers.Conv1D(256,5,activation='relu')(x)
+x = layers.Conv1D(256,5,activation='relu')(x)
+x = layers.MaxPooling1D(5)(x)
+x = layers.Conv1D(256,5,activation='relu')(x)
+x = layers.Conv1D(256,5,activation='relu')(x)
+x = layers.GlobalMaxPool1D()(x)
+x = layers.Dense(128,activation='relu')(x)
+
+
+age_prediciton = layers.Dense(1,activation='sigmoid')
+income_prediction = layers.Dense(num_income_group)
+gender_prediction = layers.Dense(1,activation='sigmoid')
+
+
+model = Model(input_one,[age_prediciton,income_prediction,gender_prediction])
+model.compile(optimizer=RMSprop(learning_rate=0.0001),
+              loss={'age':mse,
+                    'income':binary_crossentropy,
+                    'gender':categorical_crossentropy},
+              loss_weights=[0.5,1.,10.])
+df = get_file_obj()
+model.fit(df.posts,[df.age_targets,df.income_targets,df.gender_targets],epochs=10,batch_size =64)

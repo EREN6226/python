@@ -1,0 +1,44 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def critical_point_detect(path,sat):
+    try:
+        path = f'{path}.csv'
+        df = pd.read_csv(path)
+    except:
+        import logging
+        logging.basicConfig(level=logging.INFO)
+        log = logging.getLogger('E_working.log')
+        return log.info(f'Path is not exist {sys.exc_info[0]}')
+    if df.empty:
+        import time
+        import sys
+        time.sleep(5)
+        sys.stdout.write('System is deleting empty value !!!')
+        df.dropna(inplace=True)
+    df.set_index(keys=['Days','Satellite'],inplace=True)
+    new_df = df.loc[[('76.Days',sat)],[('60.Days',sat)]]
+    x0 = new_df['x_cor'][0]
+    x1 = new_df['x_cor'][1]
+    y0 = new_df['y_cor'][0]
+    y1 = new_df['y_cor'][1]
+    def __inner_draw_func():
+        fig = plt.figure(1,1)
+        ax = fig.add_axes([0,0,1,1])
+        ax.scatter(x0,y0)
+	ax.scatter(x1,y1)
+        ax.set_xticks([])
+        ax.set_yticks([])
+        ax.set_title('Critical_point')
+        ax.set_xlabel('X_COR')
+        ax.set_ylabel('Y_COR')
+        ax.annotate(text='Critical',
+        textcoords='offset points',
+        xytext=(+20,+50),xy=(x0,y0),
+        arrowprops={'arrowstyle':'->','connectionstyle':'arc3,rad=0.5'})
+	ax.annotate(text='Critical',
+        textcoords='offset points',
+        xytext=(+20,+50),xy=(x1,y1),
+        arrowprops={'arrowstyle':'->','connectionstyle':'arc3,rad=0.5'})
+    return __inner_draw_func()

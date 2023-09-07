@@ -1,0 +1,32 @@
+from sklearn import neural_network
+import numpy as np
+from sklearn import model_selection
+
+def creata_sklearn_argument(data_1,data_2):
+    def __inner_arrange_numpy():
+        x_data = np.array(x_data)
+        y_data = np.array(y_data)
+        if len(x_data.shape) == 2 and len(y_data.shape) == 2:
+            return x_data,y_data
+        else:
+            return None,None
+    if  __inner_arrange_numpy()[0] != None:
+        (x_train,x_label),(y_train,y_label) = model_selection.train_test_split(x_data,y_data)
+    else:
+        sys.exit(5)
+    def __inner_arrange_vector_argument():
+	from keras import to_categorial
+        x_train = np.asarray(x_train)
+        x_label = np.asarray(x_label)
+        y_train = 
+        y_label = np.asaray(y_label)
+        return x_train,x_label,y_train,y_label
+
+    x_train,x_label,y_train,y_label =__inner_arrange_vector_argument()
+
+    __classfier = neural_network.MLPClassifier(activation='rule',batch_size='auto'|128)
+    __classfier.fit(x_train,x_label)
+    accuary = __classfier.score(y_train,y_label)[1]ss
+    formation = format(accuary,'.2f')
+    if formation >= 90.00:
+        return __classfier.best_loss_,__classfier.best_validation_score_

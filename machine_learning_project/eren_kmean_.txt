@@ -1,0 +1,54 @@
+import pandas as pd
+from sklearn.cluster import KMeans 
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.style import use
+
+use('ggpf')
+def create_agument(value):
+    df = pd.read_csv('coordinate.txt')
+    if df.isna():
+        df.replace(np.NAN,value)
+        x_data = df.drop('X',axis=1)
+        y_data = df.drop('Y',axis=1)
+        return x_data,y_data
+    else:
+        x_data = df.drop('X',axis=1)
+        y_data = df.drop('Y',axis=1)
+        return x_data,y_data
+x_data,y_data= create_agument()
+x_data_array = np.array(x_data)
+y_data_array = np.array(y_data)
+
+def mean_point_detect():
+    kmeans = KMeans(n_clusters=2,tol=0.0001,verbose=True,random_state=0)
+    def __inner_kmeans():
+        kmeans.fit(x_data_array)
+        center_position = kmeans.cluster_centers_
+        return center_position
+    def __inner_kmeans_2():
+        kmeans.fit(y_data_array)
+        center_position_2 = kmeans.cluster_centers_
+        return center_position_2
+    return __inner_kmeans(),__inner_kmeans_2()
+
+def create_plt_func():
+    point_1,point_2 = mean_point_detect()[0],mean_point_detect()[1]
+    def __inner_range_array():
+        array1= np.array(point_1)
+        array2 = np.array(point_2) 
+        return array1,array2
+    array_1,array_2 = __inner_range_array()
+    plt.scatter(point_1[0],point_1[1],size=100)
+    plt.scatter(point_2[0],point_2[1],size=100)
+    plt.plot(array_1,array_2)
+    plt.legend()
+    plt.grid()
+    plt.show()
+
+if __name__ == "__main__":
+    import sys
+    if sys.argv[1] == 'Earthquake':
+        create_agument()    
+    else:
+        sys.exit(5)

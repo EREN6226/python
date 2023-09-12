@@ -1,44 +1,38 @@
-import sklearn.calibration as clb
 import PIL.Image
 import numpy as np
 import os.path
 import sklearn.dummy as dm
 import threading
 
-def create_check_cv(path,target1,target2)->list & dict:
+def create_check_cv(path)->list:
     import re
     if os.path.exists(path=path):
         list_documentry = os.listdir(path)
-        new_dict = {}
         list_image = []
         for i in list_documentry:
             if re.search('.img',string = i,flags=re.IGNORECASE):
-                try:
-                    with threading.Lock:
-                        open_cv = PIL.Image.open(i)
-                except:
-                    return None
-                matrix = np.asmatrix(np.asarray(open_cv.convert('L',colors=256),dtype=np.float64)) 
-                bit_lenght = clb.check_cv(cv=5,y=matrix,classifier=True).bit_length()
-                new_dict[i] = bit_lenght
-                list_image.append(i)
+                with threading.Lock():
+					try:
+						open_cv = PIL.Image.open(i)
+					except:
+						return None
+					try:
+						matrix = np.asmatrix(np.asarray(open_cv.convert('L',colors=256),dtype=np.float64))
+						list_image.append(matrix)
+					except:
+						raise
             else:
                 pass
-        return new_dict,list_image
+        return list_image[0],list_image[1]
     else:
         return None
-def new_dumpy_classifier(path):
-    bit,image = create_check_cv(path)
-    empty_list= []
-    for key,value in bit.get_items():
-        state_1 = value > 10
-        empty_list.append(state_1)
-    if all(empty_list):
+def new_dumpy_classifier(path,target1,target2):
+	if image is not None:
+		image = create_check_cv(path)
+    empty_list= [image[0],image[1]]
+    
+    if np.all(empty_list[0],empty_list[1]):
         classfier = dm.DummyClassifier(random_state=10)
         classfier.fit(image[0],target)
         return classfier.score(image[1],target2)
-    else:
-        import logging
-        logging.basicConfig(level=logging.INFO)
-	log = logging.get_logger('E_working.log')
-        return log.info()
+    
